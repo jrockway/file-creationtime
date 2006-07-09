@@ -1,5 +1,8 @@
 Revision history for File-CreationTime
 
+2.03	8 July 2006
+	Now retrieves mtime properly.
+
 2.02	7 July 2006
 	No longer needs File::ExtAttr.  Uses File::Attributes instead.
 

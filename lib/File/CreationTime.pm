@@ -19,7 +19,7 @@ Version 2.02
 
 =cut
 
-our $VERSION = '2.02';
+our $VERSION = '2.03';
 
 =head1 SYNOPSIS
 
@@ -61,7 +61,7 @@ sub creation_time {
     return $ctime if $ctime;  # BUG: fails if the ctime is the epoch, exactly
     
     # no ctime attr?  create one.
-    my $mtime = $^T + ((-M $filename) * 86400);
+    my $mtime = (stat $filename)[9]; # 9 is mtime
     
     eval {
 	set_attribute($filename, $ATTRIBUTE, $mtime);
