@@ -1,5 +1,9 @@
 Revision history for File-CreationTime
 
+2.04    16 September 2007
+        Now returns the real creation time on OS X!  Thanks
+        to Dave Cardwell for his help adding this feature.
+
 2.03	8 July 2006
 	Now retrieves mtime properly.
 
