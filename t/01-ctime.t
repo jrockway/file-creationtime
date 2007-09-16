@@ -27,7 +27,7 @@ print {$timefile} "$ctime\n";
 close $timefile;
 
 # change the mtime of the file by ... 5 seconds
-print {*STDERR} " (Sleeping 5 seconds)\n";
+diag "Sleeping 5 seconds";
 sleep 5;
 
 open $testfile, ">new.file";
