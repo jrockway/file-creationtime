@@ -136,7 +136,7 @@ Dave Cardwell added OS X support.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005 Jonathan T. Rockway, all rights reserved.
+Copyright 2005 Jonathan T. Rockway.
 
 This program is Free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
