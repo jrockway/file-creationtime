@@ -15,11 +15,11 @@ File::CreationTime - Keeps track of file creation times
 
 =head1 VERSION
 
-Version 2.02
+Version 2.04
 
 =cut
 
-our $VERSION = '2.03';
+our $VERSION = '2.04';
 
 =head1 SYNOPSIS
 
@@ -38,6 +38,7 @@ provide such information.
 =head1 FUNCTIONS
 
 =head2 creation_time
+
      creation_time('/path/to/file')
 
 Returns the creation time of /path/to/file in seconds past the epoch.
@@ -53,12 +54,20 @@ sub creation_time {
 
     die "$filename does not exist" if !-e $filename;
     
-    my $ctime = 0;
+    my $ctime;
     eval {
-	$ctime = get_attribute($filename, $ATTRIBUTE);
+        if($^O =~ 'darwin'){
+            eval {
+                require MacOSX::File::Info;
+                $ctime = MacOSX::File::Info->get($filename)->ctime();
+            }
+        }
+        
+        # fallback to attrs if the OS X method fails
+        $ctime ||= get_attribute($filename, $ATTRIBUTE);
     };
     
-    return $ctime if $ctime;  # BUG: fails if the ctime is the epoch, exactly
+    return $ctime if defined $ctime;
     
     # no ctime attr?  create one.
     my $mtime = (stat $filename)[9]; # 9 is mtime
@@ -81,6 +90,8 @@ file's creation time will obviously be wrong.  However, if you create
 a file, call creation_time, wait several years, modify the file, then
 call creation_time again, the result will be accurate.
 
+On OS X, this method is not used.  Instead, the actual creation time
+is provided via C<< MacOSX::File::Info->ctime >>.
 
 =head1 DIAGNOSTICS
 
@@ -102,9 +113,8 @@ attribute.
 =head1 BUGS
 
 I'd like to support OSes that actually give you the file creation
-time.  OS X stores this data in their HFS+ filesystem, but you can't
-get at it from any published APIs.  If you know how to do this (from
-XS), then please tell me how or send in a patch.
+time.  As of version 2.04, OS X is supported in this way.  If you know
+how to make this work on your OS, tell me how or send me a patch.
 
 Other comments and patches are always welcome.
 
@@ -119,6 +129,10 @@ your bug as I make changes.
 =head1 AUTHOR
 
 Jonathan Rockway, C<< <jrockway AT cpan.org> >>.
+
+=head1 CONTRIBUTORS
+
+Dave Cardwell added OS X support.
 
 =head1 COPYRIGHT & LICENSE
 
