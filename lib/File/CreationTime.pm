@@ -56,14 +56,19 @@ sub creation_time {
     
     my $ctime;
     eval {
-        if($^O =~ 'darwin'){
+        if($^O =~ 'Win32'){
+            eval {
+                require Win32::UTCFileTime;
+                $ctime = (Win32::UTCFileTime::stat($filename))[10];
+            }
+        }elsif($^O =~ 'darwin'){
             eval {
                 require MacOSX::File::Info;
                 $ctime = MacOSX::File::Info->get($filename)->ctime();
             }
         }
         
-        # fallback to attrs if the OS X method fails
+        # fallback to attrs if the OS-specific method fails
         $ctime ||= get_attribute($filename, $ATTRIBUTE);
     };
     
